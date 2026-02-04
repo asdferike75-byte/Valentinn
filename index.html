@@ -7,32 +7,59 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      margin-top: 100px;
+      margin-top: 80px;
       background-color: #ffe6f0;
+    }
+    input {
+      font-size: 20px;
+      padding: 8px;
+      margin-bottom: 20px;
     }
     button {
       font-size: 24px;
       padding: 10px 30px;
-      margin: 20px;
+      margin: 10px;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-<h1>Velem lennél Valentin napon?? 💖</h1>
+<h1>Velem lennél Valentin napon? 💖</h1>
 
-<button onclick="sendAnswer('Igen')">IGEN</button>
-<button onclick="sendAnswer('Nem')">NEM</button>
+<div id="content">
+  <p>Írd be a neved:</p>
+  <input type="text" id="nameInput" placeholder="Neved">
+
+  <br><br>
+
+  <button onclick="sendAnswer('Igen')">IGEN</button>
+  <button onclick="sendAnswer('Nem')">NEM</button>
+</div>
 
 <script>
+if (localStorage.getItem("alreadyAnswered")) {
+  document.body.innerHTML = "<h2>Már válaszoltál erre a kérdésre 💌</h2>";
+}
+
 function sendAnswer(valasz) {
+  const nev = document.getElementById("nameInput").value;
+
+  if (!nev) {
+    alert("Írd be a neved! 😊");
+    return;
+  }
+
   fetch("https://formspree.io/f/mlglqkve", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ valasz: valasz })
+    body: JSON.stringify({
+      nev: nev,
+      valasz: valasz
+    })
   }).then(() => {
-    document.body.innerHTML = "<h2>Köszi a választ! 💌</h2>";
+    localStorage.setItem("alreadyAnswered", "true");
+    document.body.innerHTML = "<h2>Köszi a választ, " + nev + "! 💘</h2>";
   });
 }
 </script>
