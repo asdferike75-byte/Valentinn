@@ -1,67 +1,135 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="UTF-8">
-  <title>Valentin</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 80px;
-      background-color: #ffe6f0;
-    }
-    input {
-      font-size: 20px;
-      padding: 8px;
-      margin-bottom: 20px;
-    }
-    button {
-      font-size: 24px;
-      padding: 10px 30px;
-      margin: 10px;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Valentin 💖</title>
+<style>
+body {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Arial', sans-serif;
+  overflow: hidden;
+}
+
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+h1 {
+  color: #ff4b7d;
+}
+
+input {
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  width: 80%;
+  margin-bottom: 20px;
+}
+
+button {
+  font-size: 20px;
+  padding: 10px 30px;
+  margin: 10px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#yes {
+  background: #ff4b7d;
+  color: white;
+}
+
+#yes:hover {
+  transform: scale(1.1);
+  background: #ff1f64;
+}
+
+#no {
+  background: #ccc;
+}
+
+#no:hover {
+  transform: scale(0.9);
+}
+
+.heart {
+  position: absolute;
+  color: rgba(255,0,100,0.3);
+  font-size: 20px;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  0% { transform: translateY(-50px); }
+  100% { transform: translateY(100vh); }
+}
+</style>
 </head>
 <body>
 
-<h1>Velem lennél Valentin napon? 💖</h1>
-
-<div id="content">
+<div class="card" id="content">
+  <h1>Velem lennél Valentin napon? 💘</h1>
   <p>Írd be a neved:</p>
-  <input type="text" id="nameInput" placeholder="Neved">
-
-  <br><br>
-
-  <button onclick="sendAnswer('Igen')">IGEN</button>
-  <button onclick="sendAnswer('Nem')">NEM</button>
+  <input id="nameInput" placeholder="Neved">
+  <br>
+  <button id="yes" onclick="sendAnswer('Igen')">IGEN</button>
+  <button id="no" onclick="sendAnswer('Nem')">NEM</button>
 </div>
 
 <script>
 if (localStorage.getItem("alreadyAnswered")) {
-  document.body.innerHTML = "<h2>Már válaszoltál erre a kérdésre 💌</h2>";
+  document.body.innerHTML = "<h2 style='color:white;'>Már válaszoltál 💌</h2>";
 }
+
+const formspree = "https://formspree.io/f/mlglqkve";
 
 function sendAnswer(valasz) {
   const nev = document.getElementById("nameInput").value;
-
   if (!nev) {
-    alert("Írd be a neved! 😊");
+    alert("Írd be a neved 😊");
     return;
   }
 
-  fetch("https://formspree.io/f/mlglqkve", {
+  fetch(formspree, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nev: nev,
-      valasz: valasz
-    })
+    body: JSON.stringify({ nev: nev, valasz: valasz })
   }).then(() => {
     localStorage.setItem("alreadyAnswered", "true");
-    document.body.innerHTML = "<h2>Köszi a választ, " + nev + "! 💘</h2>";
+    document.body.innerHTML = `<h1 style="color:white;">Köszi ${nev}! 💖</h1>`;
   });
 }
+
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = "❤";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = (2 + Math.random() * 3) + "s";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 5000);
+}
+
+setInterval(createHeart, 300);
 </script>
 
 </body>
